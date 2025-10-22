@@ -72,12 +72,3 @@ The system dynamically decides how to respond using specialized agents and store
 | `conversation/` | Stores **JSON conversation files**, each containing full chat history and references to uploaded documents. | [View Folder](./conversation) |
 | `embeddings7/chromadb8` | Persistent storage for embeddings used in **RAG**. Text and image embeddings are saved here for retrieval. | [View Folder](./embeddings7/chromadb8) |
 
----
-
-## Installation
-
-1. Clone the repository:
-
-```bash
-git clone <repository_url>
-cd <repository_directory>
