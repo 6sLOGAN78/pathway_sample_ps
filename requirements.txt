@@ -1,62 +1,36 @@
-# Core numerical and data libraries
+# ---------------- Core numerical and data libraries ----------------
 numpy<2.3
 pandas<2.3
+bottleneck  # speed up certain pandas operations
 
-# OpenCV (image processing)
+# ---------------- Image / OCR / PDF processing ----------------
 opencv-python<4.12
-
-# OCR
 pytesseract
-
-# Speed up certain pandas operations
-bottleneck
-
-# Pathway / LangChain dependencies (if using your AI code)
-langchain==0.1.30
-langchain-community==0.3.27
-langchain-google-genai==0.0.14
-
-# HTTP / Web
-requests
-
-# Environment / configuration
-python-dotenv
-
-# Pydantic for schemas
-pydantic<2.0
-
-# Optional (if you use PDF / document processing)
+Pillow>=10.0.0
+PyMuPDF>=1.22.5
+python-docx>=0.8.11
 camelot-py[cv]<1.1
 PyPDF2<3.0
 pdfplumber<0.9
-# Core numerical and data libraries
-numpy<2.3
-pandas<2.3
 
-# OpenCV (image processing)
-opencv-python<4.12
-
-# OCR
-pytesseract
-
-# Speed up certain pandas operations
-bottleneck
-
-# Pathway / LangChain dependencies (if using your AI code)
+# ---------------- AI / LangChain / Gemini ----------------
 langchain==0.1.30
 langchain-community==0.3.27
 langchain-google-genai==0.0.14
+google-genai>=0.0.2
+sentence-transformers>=2.2.2
+transformers>=4.34.0
+torch>=2.1.0
+tiktoken>=0.4.0
 
-# HTTP / Web
+# ---------------- RAG / Embeddings ----------------
+chromadb>=0.4.0
+scipy>=1.11.0
+
+# ---------------- HTTP / Environment ----------------
 requests
-
-# Environment / configuration
+httpx>=0.24.1
 python-dotenv
 
-# Pydantic for schemas
+# ---------------- Data validation ----------------
 pydantic<2.0
-
-# Optional (if you use PDF / document processing)
-camelot-py[cv]<1.1
-PyPDF2<3.0
-pdfplumber<0.9
