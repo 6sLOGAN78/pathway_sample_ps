@@ -1,0 +1,16 @@
+{
+  "conversation_id": "6a17932d-6063-43a9-92f3-b89e703657a3",
+  "conversation_name": "Canara Account Number",
+  "created_at": "2025-10-22 12:38:41",
+  "chat": [
+    {
+      "role": "user",
+      "content": "my canara bank account number is 12345678"
+    },
+    {
+      "role": "assistant",
+      "content": "Thank you for providing your Canara Bank account number. I have noted it as 12345678 in your user information for future reference."
+    }
+  ],
+  "documents": []
+}

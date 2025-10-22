@@ -1,0 +1,62 @@
+# Core numerical and data libraries
+numpy<2.3
+pandas<2.3
+
+# OpenCV (image processing)
+opencv-python<4.12
+
+# OCR
+pytesseract
+
+# Speed up certain pandas operations
+bottleneck
+
+# Pathway / LangChain dependencies (if using your AI code)
+langchain==0.1.30
+langchain-community==0.3.27
+langchain-google-genai==0.0.14
+
+# HTTP / Web
+requests
+
+# Environment / configuration
+python-dotenv
+
+# Pydantic for schemas
+pydantic<2.0
+
+# Optional (if you use PDF / document processing)
+camelot-py[cv]<1.1
+PyPDF2<3.0
+pdfplumber<0.9
+# Core numerical and data libraries
+numpy<2.3
+pandas<2.3
+
+# OpenCV (image processing)
+opencv-python<4.12
+
+# OCR
+pytesseract
+
+# Speed up certain pandas operations
+bottleneck
+
+# Pathway / LangChain dependencies (if using your AI code)
+langchain==0.1.30
+langchain-community==0.3.27
+langchain-google-genai==0.0.14
+
+# HTTP / Web
+requests
+
+# Environment / configuration
+python-dotenv
+
+# Pydantic for schemas
+pydantic<2.0
+
+# Optional (if you use PDF / document processing)
+camelot-py[cv]<1.1
+PyPDF2<3.0
+pdfplumber<0.9
