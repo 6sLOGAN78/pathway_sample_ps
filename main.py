@@ -19,7 +19,7 @@ if not API_KEY:
 
 # ---------------- Setup Models ----------------
 enc = tiktoken.encoding_for_model("gpt-4")
-TOKEN_LIMIT = 8000
+TOKEN_LIMIT = 100000
 
 decision_agent = DecisionAgent(api_key=API_KEY)
 web_agent = webQuery(api_key=API_KEY)

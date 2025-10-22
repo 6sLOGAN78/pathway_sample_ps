@@ -91,6 +91,9 @@ else:
     col = client.create_collection(name=collection_name)
 
 def store_in_chroma(ids, embeddings, metadatas, documents):
+    if not embeddings:
+        print("[WARN] No embeddings to store, skipping.")
+        return
     col.add(ids=ids, embeddings=embeddings, metadatas=metadatas, documents=documents)
 
 # ---------------- Main Saver ----------------
@@ -103,7 +106,7 @@ def save_documents_for_future(documents):
         metadatas = []
         docs_text = []
 
-        # Text
+        # ---------------- Text ----------------
         text_pages = []
         if doc_path.lower().endswith(".pdf"):
             text_pages = extract_text_from_pdf(doc_path)
@@ -120,7 +123,7 @@ def save_documents_for_future(documents):
                     metadatas.append({"type": "text", "source": doc_name, "page": i})
                     docs_text.append(chunk)
 
-        # Images
+        # ---------------- Images in PDFs ----------------
         if doc_path.lower().endswith(".pdf"):
             images = extract_images_from_pdf(doc_path)
             for i, img, img_id in images:
@@ -130,4 +133,18 @@ def save_documents_for_future(documents):
                 metadatas.append({"type": "image", "source": doc_name, "page": i})
                 docs_text.append("")
 
+        # ---------------- Standalone Images ----------------
+        if doc_path.lower().endswith((".png", ".jpg", ".jpeg")):
+            try:
+                img = Image.open(doc_path).convert("RGB")
+                emb = embed_image(img)
+                embeddings.append(emb)
+                ids.append(doc_name)
+                metadatas.append({"type": "image", "source": doc_name})
+                docs_text.append("")
+                print(f"[INFO] Embedded standalone image: {doc_name}")
+            except Exception as e:
+                print(f"[ERROR] Failed to embed image {doc_name}: {e}")
+
+        # ---------------- Store in Chroma ----------------
         store_in_chroma(ids, embeddings, metadatas, docs_text)

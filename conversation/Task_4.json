@@ -1,0 +1,21 @@
+{
+  "conversation_id": "afbb5db1-508e-41ef-8d67-9e15cc0b8c96",
+  "conversation_name": "Task 4",
+  "created_at": "2025-10-23 00:39:04",
+  "chat": [
+    {
+      "role": "user",
+      "content": "tell me about task 4"
+    },
+    {
+      "role": "assistant",
+      "content": "Based on the \"Summary of Sample PS.pdf\" document, Task 4 is focused on **AI-powered Customer Support**.\n\nHere's a breakdown of its goal and requirements:\n\n**Goal:**\n*   To build an AI system capable of communicating with users and answering financial queries, highlighting a key application area of AI in customer support.\n\n**Requirements:**\n1.  **User Input:** The system must be able to take user input in the form of a string.\n2.  **Processing & Response Generation:** It needs to process this user input using a language model (which can be hosted locally or on the cloud) and then generate a relevant response.\n3.  **Display Response:** The generated response must be displayed to the user.\n\n**Bonus Points:**\n*   You can earn bonus points for implementing a feature that stores important user details extracted from their text prompts."
+    }
+  ],
+  "documents": [
+    {
+      "filename": "Sample PS.pdf",
+      "path": "/home/logan78/pathway_sample_ps/Sample PS.pdf"
+    }
+  ]
+}
