@@ -91,7 +91,7 @@ Answer clearly and professionally.
 User memory (from user_details.txt):
 {user_memory}
 
-You can use the above user memory to assist the user in their financial decisions. First answer yourself, then provide guidance.
+You can use the above user memory to assist the user in their queries.
 """)
 
 system_prompt = create_system_prompt()
