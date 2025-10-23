@@ -1,9 +1,7 @@
 import os
 from dotenv import load_dotenv
 from google.genai import Client
-
 load_dotenv()
-
 class webQuery:
     def __init__(self, api_key: str = None):
         if api_key is None:
@@ -11,7 +9,6 @@ class webQuery:
         if not api_key:
             raise ValueError("API key not provided and GOOGLE_API_KEY not set in environment.")
         self.client = Client(api_key=api_key)
-
     def query(self, user_query: str) -> dict:
         """
         Returns a dictionary with:
@@ -23,7 +20,6 @@ class webQuery:
             contents=user_query,
             config={"tools": [{"google_search": {}}]}
         )
-
         sources = []
         try:
             chunks = response.candidates[0].grounding_metadata.grounding_chunks
@@ -38,7 +34,6 @@ class webQuery:
                             sources.append(title)
         except Exception:
             sources = []
-
         return {"text": response.text, "sources": sources}
 
 
