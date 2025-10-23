@@ -63,7 +63,8 @@ The system dynamically decides how to respond using specialized agents and store
 | [web_search.py](./web_search.py) | Implements **WebQuery Agent** that performs live web searches using Google Gemini API and retrieves summarized answers with sources. | [View Code](./web_search.py) |
 | [evaluator.py](./evaluator.py) | Implements **DecisionAgent**. Analyzes user queries to determine whether web search is needed, memory should be updated, or document retrieval is required. | [View Code](./evaluator.py) |
 | [naming_agent.py](./naming_agent.py) | Generates dynamic names for conversations based on user queries to help identify and store sessions. | [View Code](./naming_agent.py) |
-
+[json_helper.py](./json_helper.py) | Helps to handle json file and updates. | [View Code](./json_helper.py) |
+[get_news.py](./get_news.py) | takes user_details.txt and according to users likes and dislikes it updates the news section. | [View Code](./get_news.py) |
 ### Data & Storage
 
 | File / Folder | Description | Link |
