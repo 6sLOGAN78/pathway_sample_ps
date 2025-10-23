@@ -62,7 +62,7 @@ class UserPreferencesAgent:
         return result
 
 
-# --- Example usage ---
+# Example usage 
 if __name__ == "__main__":
     agent = UserPreferencesAgent()
     news = agent.fetch_news_based_on_preferences()

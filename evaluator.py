@@ -5,14 +5,14 @@ from pydantic import BaseModel, Field
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import SystemMessage, HumanMessage
 
-# ---------------- Load Environment ----------------
+
 load_dotenv()
 API_KEY_BACKUP = os.getenv("GOOGLE_API_KEY")
 if not API_KEY_BACKUP:
     raise ValueError("Missing GOOGLE_API_KEY in .env file")
 
 
-# ---------------- Schema ----------------
+# Schema
 class MemoryDecision(BaseModel):
     Need_web: str = Field(
         description="Does this query require real-time or factual data?",
@@ -27,7 +27,7 @@ class MemoryDecision(BaseModel):
     )
 
 
-# ---------------- System Prompt ----------------
+# Prompt 
 SYSTEM_PROMPT = SystemMessage(content="""
 You are an intelligent evaluator agent.
 
@@ -39,9 +39,9 @@ Your job:
    - Write it in `new_info`.
 
 Examples:
-User: "My Canara bank account is 123456y and I like samosa"
+User: "i lost my bank account , i love intraday tradin, i love tata steel stocs, my phone number is, remember this" ----------------" "
 → update_user_data = true
-→ new_info = "User's Canara bank account number is 123456y and they like samosa."
+→ new_info = ""
 
 User: "What is the current stock price of Tesla?"
 → update_user_data = false
@@ -55,7 +55,7 @@ Always respond as **valid JSON only**:
 }
 """)
 
-# ---------------- Decision Agent ----------------
+# Decision Agent 
 class DecisionAgent:
     def __init__(self, api_key: Optional[str] = None):
         if api_key is None:

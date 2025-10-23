@@ -1,4 +1,3 @@
-# json_helper.py
 import os
 import json
 import datetime
@@ -16,7 +15,7 @@ def create_conversation() -> dict:
     conversation_id = str(uuid.uuid4())
     conversation = {
         "conversation_id": conversation_id,
-        "conversation_name": None,  # will be set on first user query/upload
+        "conversation_name": None,  
         "created_at": str(datetime.datetime.utcnow()),
         "messages": [],
         "documents": []

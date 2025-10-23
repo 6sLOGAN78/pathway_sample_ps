@@ -1,4 +1,3 @@
-# naming_agent.py
 import os
 from dotenv import load_dotenv
 from google import genai
@@ -39,7 +38,6 @@ Only output the name, no explanations.
                 contents=prompt
             )
             name = response.text.strip().replace("\n", " ")
-            # Sanitize for filename
             name = "".join(c for c in name if c.isalnum() or c in (' ', '-', '_')).strip()
             return name or "Unnamed_Conversation"
         except Exception as e:

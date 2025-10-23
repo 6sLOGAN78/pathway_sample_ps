@@ -1,7 +1,6 @@
-# document_saver.py
 import os
 import io
-import fitz  # PyMuPDF
+import fitz  
 import docx
 from PIL import Image
 import torch
@@ -11,7 +10,7 @@ from sentence_transformers import SentenceTransformer
 from transformers import CLIPProcessor, CLIPModel
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-# ---------------- Settings ----------------
+
 PERSIST_DIR = "embeddings7/chromadb8"
 CHUNKS_DIR = "chunks"
 TEXT_MODEL_NAME = "nomic-ai/nomic-embed-text-v1.5"
@@ -19,7 +18,7 @@ IMAGE_MODEL_NAME = "openai/clip-vit-large-patch14"
 MAX_WORDS_PER_CHUNK = 2000
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-# ---------------- Models ----------------
+#embeddings
 text_model = SentenceTransformer(TEXT_MODEL_NAME, device=device, trust_remote_code=True)
 text_model.max_seq_length = 4096
 text_model.eval()
@@ -30,7 +29,7 @@ clip_model.eval()
 
 os.makedirs(CHUNKS_DIR, exist_ok=True)
 
-# ---------------- Text Splitter ----------------
+#Splitter 
 splitter = RecursiveCharacterTextSplitter(
     chunk_size=MAX_WORDS_PER_CHUNK,
     chunk_overlap=200
@@ -41,7 +40,7 @@ def split_text_to_chunks(text: str):
         return []
     return splitter.split_text(text)
 
-# ---------------- Extraction ----------------
+# Extraction 
 def extract_text_from_pdf(pdf_path: str):
     txts = []
     with fitz.open(pdf_path) as doc:
@@ -68,7 +67,7 @@ def extract_text_from_docx(path: str):
     doc = docx.Document(path)
     return [p.text for p in doc.paragraphs if p.text.strip()]
 
-# ---------------- Embeddings ----------------
+# Embeddings 
 def embed_text_chunk(text: str) -> np.ndarray:
     if not text.strip():
         return None
@@ -82,7 +81,7 @@ def embed_image(image: Image.Image) -> np.ndarray:
         features = features / features.norm(dim=-1, keepdim=True)
     return features.squeeze().cpu().numpy()
 
-# ---------------- ChromaDB ----------------
+# database
 client = chromadb.PersistentClient(path=PERSIST_DIR)
 collection_name = "multimodal_embeddings"
 if collection_name in [c.name for c in client.list_collections()]:
@@ -96,7 +95,7 @@ def store_in_chroma(ids, embeddings, metadatas, documents):
         return
     col.add(ids=ids, embeddings=embeddings, metadatas=metadatas, documents=documents)
 
-# ---------------- Main Saver ----------------
+# Main
 def save_documents_for_future(documents):
     for doc in documents:
         doc_path = doc["path"]
@@ -106,7 +105,7 @@ def save_documents_for_future(documents):
         metadatas = []
         docs_text = []
 
-        # ---------------- Text ----------------
+        # Text 
         text_pages = []
         if doc_path.lower().endswith(".pdf"):
             text_pages = extract_text_from_pdf(doc_path)
@@ -123,7 +122,7 @@ def save_documents_for_future(documents):
                     metadatas.append({"type": "text", "source": doc_name, "page": i})
                     docs_text.append(chunk)
 
-        # ---------------- Images in PDFs ----------------
+        # Images in PDFs
         if doc_path.lower().endswith(".pdf"):
             images = extract_images_from_pdf(doc_path)
             for i, img, img_id in images:
@@ -133,7 +132,7 @@ def save_documents_for_future(documents):
                 metadatas.append({"type": "image", "source": doc_name, "page": i})
                 docs_text.append("")
 
-        # ---------------- Standalone Images ----------------
+        # Images 
         if doc_path.lower().endswith((".png", ".jpg", ".jpeg")):
             try:
                 img = Image.open(doc_path).convert("RGB")
@@ -146,5 +145,5 @@ def save_documents_for_future(documents):
             except Exception as e:
                 print(f"[ERROR] Failed to embed image {doc_name}: {e}")
 
-        # ---------------- Store in Chroma ----------------
+        # Store in Chroma 
         store_in_chroma(ids, embeddings, metadatas, docs_text)

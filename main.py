@@ -11,13 +11,13 @@ from web_search import webQuery
 from google import genai
 from google.genai import types
 
-# ---------------- Environment ----------------
+# Environment 
 load_dotenv()
 API_KEY = os.getenv("GOOGLE_API_KEY")
 if not API_KEY:
     raise ValueError("Missing GOOGLE_API_KEY in .env file")
 
-# ---------------- Setup Models ----------------
+#  Setup Models 
 enc = tiktoken.encoding_for_model("gpt-4")
 TOKEN_LIMIT = 100000
 
@@ -27,7 +27,7 @@ naming_agent = NamingAgent(api_key=API_KEY)
 genai_client = genai.Client(api_key=API_KEY)
 model = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=API_KEY)
 
-# ---------------- Helper Functions ----------------
+# Helper Functions 
 def count_tokens(messages):
     return sum(len(enc.encode(msg.content)) for msg in messages)
 
@@ -61,7 +61,7 @@ def save_conversation_json(conversation_data, filename, folder="conversation"):
     print(f"[INFO] Conversation saved/updated to {file_path}")
     return file_path
 
-# ---------------- User Memory File ----------------
+#  User Memory File 
 USER_MEMORY_PATH = os.path.join(os.path.dirname(__file__), "user_details.txt")
 os.makedirs(os.path.dirname(USER_MEMORY_PATH) or ".", exist_ok=True)
 if not os.path.exists(USER_MEMORY_PATH):
@@ -82,7 +82,7 @@ def update_user_memory(new_info: str):
     # Reload memory so system prompt sees latest info
     return load_user_memory()
 
-# ---------------- System Prompt ----------------
+#  System Prompt 
 def create_system_prompt():
     return SystemMessage(content=f"""
 You are a highly knowledgeable financial advisor.
@@ -96,7 +96,7 @@ You can use the above user memory to assist the user in their financial decision
 
 system_prompt = create_system_prompt()
 
-# ---------------- Load Previous Conversation ----------------
+#  Load Previous Conversation 
 conversation_folder = "conversation"
 existing_convos = list_conversations(conversation_folder)
 conversation_path = None
@@ -115,7 +115,7 @@ if existing_convos:
 else:
     print("[INFO] No previous conversations found. Starting new conversation.")
 
-# ---------------- Initialize Conversation ----------------
+#Initialize Conversation 
 chat_history = [system_prompt]
 uploaded_docs_bytes = []
 conversation_id = str(uuid.uuid4())
@@ -148,14 +148,14 @@ if conversation_path and os.path.exists(conversation_path):
             chat_history.append(AIMessage(content=msg["content"]))
     uploaded_docs_bytes = data.get("documents", [])
 
-# ---------------- Chat Loop ----------------
+# Loop 
 while True:
     user_input = input("You (or type 'upload <file_path>' / 'exit'): ").strip()
     if user_input.lower() == "exit":
         print("[INFO] Ending session...")
         break
 
-    # --- Handle document upload ---
+    # Handle document upload
     if user_input.lower().startswith("upload "):
         file_path = user_input[7:].strip()
         if not os.path.exists(file_path):
@@ -180,13 +180,13 @@ while True:
             print(f"[ERROR] Failed to read file: {e}")
         continue
 
-    # --- Step 1: Evaluate query ---
+    # Step 1: Evaluate query
     decision = decision_agent.analyze_query(user_input)
     need_web = decision["Need_web"] == "yes"
     update_user = decision["update_user_data"]
     new_info = decision.get("new_info")
 
-    # --- Step 2: Web search ---
+    # Step 2: Web search 
     web_context = ""
     web_sources = []
     if need_web:
@@ -203,7 +203,7 @@ while True:
         print("[ERROR] Token limit exceeded.")
         break
 
-    # --- Step 4: Process uploaded docs ---
+    # Step 4: Process uploaded docs 
     doc_summaries = []
     for doc in uploaded_docs_bytes:
         try:
@@ -224,7 +224,7 @@ while True:
     if web_context:
         messages_to_send.append(HumanMessage(content=f"[Web Search Results]: {web_context}\nSources: {', '.join(web_sources)}"))
 
-    # --- Step 5: Generate AI response ---
+
     try:
         result = model.invoke(messages_to_send)
         ai_response = str(result.content)
@@ -232,33 +232,33 @@ while True:
         print(f"[ERROR] Failed to generate AI response: {e}")
         continue
 
-    # --- Step 6: Update chat history ---
+    #  Update chat history 
     chat_history.append(HumanMessage(content=user_input))
     chat_history.append(AIMessage(content=ai_response))
     user_messages.append(user_input)
     conversation_data["chat"].append({"role": "user", "content": user_input})
     conversation_data["chat"].append({"role": "assistant", "content": ai_response})
 
-    # --- Step 7: Print output ---
+    # Print output 
     print("\nAI:", ai_response)
     if web_sources:
         print("\nWeb Sources:")
         for src in web_sources:
             print("-", src)
 
-    # --- Step 8: Dynamic Name Generation ---
+    # Dynamic Name Generation 
     if conversation_data["conversation_name"] == "Unnamed Conversation":
         name = naming_agent.generate_name(user_messages)
         conversation_data["conversation_name"] = name
         print(f"[INFO] Conversation named: {name}")
 
-    # --- Step 9: Append new info to user_details.txt ---
+    # Append new info to user_details.txt 
     if update_user and new_info:
         user_memory = update_user_memory(new_info)
         # Update system prompt so AI sees latest memory immediately
         chat_history[0] = create_system_prompt()
 
-# ---------------- Save Uploaded Docs ----------------
+#  Save Uploaded Docs 
 if uploaded_docs_bytes:
     save_choice = input("You uploaded documents during this session. Do you want to save them for future use? (yes/no): ").strip().lower()
     if save_choice in ("yes", "y"):
@@ -266,7 +266,7 @@ if uploaded_docs_bytes:
         save_documents_for_future(uploaded_docs_bytes)
         print("[INFO] Documents have been saved and embedded into ChromaDB.")
 
-# ---------------- Save JSON Conversation ----------------
+# Save JSON Conversation 
 filename = f"{conversation_data['conversation_name'].replace(' ', '_')}.json"
 save_conversation_json(conversation_data, filename, folder="conversation")
 print("[INFO] Session complete. Conversation saved.")

@@ -1,4 +1,3 @@
-# user_data_Control.py
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import SystemMessage, HumanMessage
@@ -7,20 +6,17 @@ from google.genai import types
 import tiktoken
 from dotenv import load_dotenv
 load_dotenv()
-# ---------------- Config ----------------
-USER_MEMORY_PATH = "toy_user_Detail.txt"
+USER_MEMORY_PATH = "user_details.txt"
 TOKEN_LIMIT = 2000
 
 API_KEY = os.getenv("GOOGLE_API_KEY")
 if not API_KEY:
     raise ValueError("Missing GOOGLE_API_KEY in environment variables")
 
-# ---------------- Initialize AI ----------------
 enc = tiktoken.encoding_for_model("gpt-4")
 genai_client = genai.Client(api_key=API_KEY)
 model = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=API_KEY)
 
-# ---------------- Helpers ----------------
 def load_user_memory() -> str:
     if not os.path.exists(USER_MEMORY_PATH):
         with open(USER_MEMORY_PATH, "w", encoding="utf-8") as f:
@@ -36,7 +32,6 @@ def save_user_memory(text: str):
         f.write(text)
     print(f"[INFO] User memory updated. Current tokens: {count_tokens(text)}")
 
-# ---------------- Summarization ----------------
 def summarize_memory(memory_text: str) -> str:
     """
     Calls AI to remove least important points to reduce tokens under TOKEN_LIMIT.
@@ -67,8 +62,7 @@ Return the updated memory as plain text.
         # fallback: truncate manually
         tokens = enc.encode(memory_text)[:TOKEN_LIMIT]
         return enc.decode(tokens)
-
-# ---------------- Main ----------------
+# Example
 if __name__ == "__main__":
     user_memory = load_user_memory()
     print(f"[INFO] Current tokens in user memory: {count_tokens(user_memory)}")
